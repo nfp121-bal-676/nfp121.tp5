@@ -13,8 +13,9 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class JPanelListe2 extends JPanel implements ActionListener, ItemListener {
+public class JPanelListe3 extends JPanel implements ActionListener, ItemListener {
 
+    
     private JPanel cmd = new JPanel();
     private JLabel afficheur = new JLabel();
     private JTextField saisie = new JTextField();
@@ -35,11 +36,10 @@ public class JPanelListe2 extends JPanel implements ActionListener, ItemListener
 
     private List<String> liste;
     private Map<String, Integer> occurrences;
-    
-    
-    private Stack<List<String>> stk;
+    private Originator originator = new Originator();
+    private Caretaker caretaker = new Caretaker();    
 
-    public JPanelListe2(List<String> liste, Map<String, Integer> occurrences) {
+    public JPanelListe3(List<String> liste, Map<String, Integer> occurrences) {
         this.liste = liste;
         this.occurrences = occurrences;
 
@@ -90,8 +90,12 @@ public class JPanelListe2 extends JPanel implements ActionListener, ItemListener
                 afficheur.setText("résultat de la recherche de : "
                     + saisie.getText() + " -->  " + res);
             } else if (ae.getSource() == boutonRetirer) {
+                List<String> l = new ArrayList<>(this.liste);
                 res = retirerDeLaListeTousLesElementsCommencantPar(saisie
                     .getText());
+                if(res) {
+                    save(l);
+                }
                 afficheur
                 .setText("résultat du retrait de tous les éléments commençant par -->  "
                     + saisie.getText() + " : " + res);
@@ -101,6 +105,16 @@ public class JPanelListe2 extends JPanel implements ActionListener, ItemListener
                     afficheur.setText(" -->  " + occur + " occurrence(s)");
                 else
                     afficheur.setText(" -->  ??? ");
+            } else if(ae.getSource() == boutonAnnuler){
+                             
+                try{
+                    if(!caretaker.isEmpty()){
+                        liste = originator.restoreFromMemento(caretaker.getMemento());
+                        occurrences = Chapitre2CoreJava2.occurrencesDesMots(this.liste); 
+                    } 
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             texte.setText(liste.toString());
 
@@ -130,7 +144,9 @@ public class JPanelListe2 extends JPanel implements ActionListener, ItemListener
         texte.setText(liste.toString());
     }
     private void save(List<String> list){
-        stk.push(list);
+        list = new ArrayList<>(this.liste);
+        originator.set(list);
+        caretaker.addMemento(originator.saveToMemento());
     }
     
     private boolean retirerDeLaListeTousLesElementsCommencantPar(String prefixe) {

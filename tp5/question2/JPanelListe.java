@@ -63,7 +63,11 @@ public class JPanelListe extends JPanel implements ActionListener, ItemListener 
         add(texte, "Center");
 
         boutonRechercher.addActionListener(this);
-        // à compléter;
+        ordreCroissant.addItemListener(this);
+        ordreDecroissant.addItemListener(this);
+        boutonOccurrences.addActionListener(this);
+        boutonRetirer.addActionListener(this);
+        saisie.addActionListener(this);
 
     }
 
@@ -95,18 +99,24 @@ public class JPanelListe extends JPanel implements ActionListener, ItemListener 
 
     public void itemStateChanged(ItemEvent ie) {
         if (ie.getSource() == ordreCroissant)
-            ;// à compléter
+             Collections.sort(this.liste);
         else if (ie.getSource() == ordreDecroissant)
-            ;// à compléter
+            Collections.sort(this.liste, Collections.reverseOrder());
 
         texte.setText(liste.toString());
     }
 
     private boolean retirerDeLaListeTousLesElementsCommencantPar(String prefixe) {
         boolean resultat = false;
-        // à compléter
-        // à compléter
-        // à compléter
+        Iterator<String> iter = this.liste.iterator();
+        while(iter.hasNext()) {
+            String str = iter.next();
+            if (str.startsWith(prefixe)) {
+                iter.remove();
+                resultat = true;
+                this.occurrences.put(str, 0);
+            }
+        }
         return resultat;
     }
 

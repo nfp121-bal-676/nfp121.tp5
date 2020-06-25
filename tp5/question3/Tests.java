@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class Tests extends junit.framework.TestCase {
 
-    public void test1(question3.Factory/* à compléter */f) throws Exception {
+    public void test1(question3.Factory<Set>  f) throws Exception {
         Set<Integer> set = f.create();
         for (int i = 20; i > 0; i--)
             set.add(i);
@@ -21,4 +21,10 @@ public class Tests extends junit.framework.TestCase {
         }
     }
 
+    public void test2(){
+        Factory<Set> factory1 = new TreeSetFactory<String>();
+        Factory<Set> factory2 = new HashSetFactory<String>();
+        Set<String> set = factory1.create();
+        factory2.create();
+    }
 }
